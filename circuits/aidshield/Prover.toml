@@ -1,7 +1,5 @@
-leaf = "REAL_LEAF"
-root = "REAL_ROOT"
+leaf = "1"
+root = "6"
 
-proof = [
-  "PROOF_0",
-  "PROOF_1"
-]
+sibling1 = "2"
+sibling2 = "3"

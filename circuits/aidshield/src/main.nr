@@ -3,19 +3,25 @@ fn hash(a: Field, b: Field) -> Field {
 }
 
 fn main(
-    leaf: Field,
+    leaf: pub Field,
     root: pub Field,
-    proof: [Field; 2]
+    sibling1: Field,
+    sibling2: Field,
+    is_left1: pub bool,
+    is_left2: pub bool
 ) {
-    let mut current = leaf;
 
-    current = hash(current, proof[0]);
-    current = hash(current, proof[1]);
+    let h1 = if is_left1 {
+        hash(leaf, sibling1)
+    } else {
+        hash(sibling1, leaf)
+    };
 
-    assert(current == root);
-}
+    let h2 = if is_left2 {
+        hash(h1, sibling2)
+    } else {
+        hash(sibling2, h1)
+    };
 
-#[test]
-fn test_main() {
-    main(1, 6, [2, 3]);
+    assert(h2 == root);
 }

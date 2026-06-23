@@ -1,5 +1,7 @@
 node_modules/
 target/
 *.gz
-dist/
-.env
+*.json
+*.log
+
+circuits/**/target/
