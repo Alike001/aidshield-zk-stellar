@@ -1,2 +1,5 @@
-eligibility_score = "10"
-threshold = "1"
+beneficiary_id = "1"
+secret = "1234"
+
+expected_beneficiary_id = "1"
+nullifier = "1522756"
