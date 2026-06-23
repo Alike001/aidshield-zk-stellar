@@ -1,5 +1,7 @@
-beneficiary_id = "1"
-secret = "1234"
+leaf = "REAL_LEAF"
+root = "REAL_ROOT"
 
-expected_beneficiary_id = "1"
-nullifier = "1522756"
+proof = [
+  "PROOF_0",
+  "PROOF_1"
+]

@@ -1,23 +1,21 @@
+fn hash(a: Field, b: Field) -> Field {
+    a + b
+}
+
 fn main(
-    beneficiary_id: Field,
-    secret: Field,
-    expected_beneficiary_id: pub Field,
-    nullifier: pub Field
+    leaf: Field,
+    root: pub Field,
+    proof: [Field; 2]
 ) {
+    let mut current = leaf;
 
-    assert(beneficiary_id == expected_beneficiary_id);
+    current = hash(current, proof[0]);
+    current = hash(current, proof[1]);
 
-    let computed_nullifier = secret * secret;
-
-    assert(computed_nullifier == nullifier);
+    assert(current == root);
 }
 
 #[test]
 fn test_main() {
-    main(
-        1,
-        1234,
-        1,
-        1522756
-    );
+    main(1, 6, [2, 3]);
 }
