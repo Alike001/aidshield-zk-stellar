@@ -1,17 +1,25 @@
 const fs = require("fs");
 
-// simple deterministic values (stable for hackathon demo)
-const leaf = 1;
+// Read beneficiaries
+const beneficiaries = JSON.parse(
+  fs.readFileSync("./backend/beneficiaries.json", "utf8")
+);
+
+// Select first eligible beneficiary
+const beneficiary = beneficiaries.find(b => b.eligible);
+
+if (!beneficiary) {
+  throw new Error("No eligible beneficiary found");
+}
+
+// Generate demo values from beneficiary id
+const leaf = beneficiary.id;
 const sibling1 = 2;
 const sibling2 = 3;
 
-// same logic as circuit
+// Circuit logic
 const h1 = leaf + sibling1;
 const root = h1 + sibling2;
-
-// proof direction flags
-const is_left1 = true;
-const is_left2 = true;
 
 const proverToml = `
 leaf = "${leaf}"
@@ -24,7 +32,18 @@ is_left1 = true
 is_left2 = true
 `;
 
-fs.writeFileSync("../circuits/aidshield/Prover.toml", proverToml.trim());
+fs.writeFileSync(
+  "./circuits/aidshield/Prover.toml",
+  proverToml.trim()
+);
 
-console.log("✔ Stable ZK inputs generated");
-console.log({ leaf, root, sibling1, sibling2 });
+console.log("✅ Beneficiary selected:");
+console.log(beneficiary);
+
+console.log("✅ Prover.toml generated");
+console.log({
+  leaf,
+  root,
+  sibling1,
+  sibling2
+});
