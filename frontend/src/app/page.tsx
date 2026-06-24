@@ -16,13 +16,26 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 justify-center">
-          <button className="px-6 py-3 rounded-lg border">
+          <a
+            href="/verify"
+            className="px-6 py-3 rounded-lg border"
+          >
             Check Eligibility
-          </button>
+          </a>
 
-          <button className="px-6 py-3 rounded-lg border">
-            View Contract
-          </button>
+         <a
+           href="/claim"
+           className="px-6 py-3 rounded-lg border"
+         >
+           Claim Aid
+         </a>
+
+        <a
+         href="/dashboard"
+         className="px-6 py-3 rounded-lg border"
+       >
+         Dashboard
+       </a>
         </div>
 
         <div className="mt-16 grid md:grid-cols-3 gap-6">

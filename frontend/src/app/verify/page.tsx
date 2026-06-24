@@ -6,6 +6,7 @@ import { beneficiaries } from "@/data/beneficiaries";
 export default function VerifyPage() {
   const [selected, setSelected] = useState("");
   const [result, setResult] = useState<string | null>(null);
+  const [eligible, setEligible] = useState(false);
 
   const verifyUser = () => {
     const user = beneficiaries.find(
@@ -15,8 +16,10 @@ export default function VerifyPage() {
     if (!user) return;
 
     if (user.eligible) {
+      setEligible(true);
       setResult("✅ Eligible for Aid");
     } else {
+      setEligible(false);
       setResult("❌ Not Eligible");
     }
   };
@@ -52,10 +55,21 @@ export default function VerifyPage() {
         </button>
 
         {result && (
-          <div className="mt-6 text-xl">
-            {result}
-          </div>
-        )}
+         <div className="mt-6">
+          <div className="text-xl mb-4">
+           {result}
+         </div>
+
+         {eligible && (
+           <a
+             href="/claim"
+             className="border rounded px-6 py-3 inline-block"
+           >
+             Continue to Claim
+           </a>
+         )}
+        </div>
+       )}
       </div>
     </main>
   );
