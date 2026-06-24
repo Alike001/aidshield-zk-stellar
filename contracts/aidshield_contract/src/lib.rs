@@ -11,7 +11,8 @@ pub struct AidShield;
 impl AidShield {
 
     pub fn init(env: Env) {
-        env.storage().instance().set(&USED, &Map::<BytesN<32>, bool>::new(&env));
+        let used: Map<BytesN<32>, bool> = Map::new(&env);
+        env.storage().instance().set(&USED, &used);
     }
 
     pub fn claim(env: Env, nullifier: BytesN<32>, proof_valid: bool) -> bool {

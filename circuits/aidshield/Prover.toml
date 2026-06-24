@@ -3,3 +3,6 @@ root = "6"
 
 sibling1 = "2"
 sibling2 = "3"
+
+is_left1 = true
+is_left2 = true

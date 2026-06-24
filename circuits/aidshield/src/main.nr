@@ -10,7 +10,6 @@ fn main(
     is_left1: pub bool,
     is_left2: pub bool
 ) {
-
     let h1 = if is_left1 {
         hash(leaf, sibling1)
     } else {
