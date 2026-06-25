@@ -122,6 +122,24 @@ export default function Dashboard() {
     </tbody>
    </table>
    </div>
+  
+   <div className="border rounded-xl p-6 mt-8">
+    <h2 className="text-2xl font-bold mb-4">
+     Stellar Deployment
+    </h2>
+
+    <p className="break-all mb-4">
+     CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD
+    </p>
+
+    <a
+     href="https://lab.stellar.org/r/testnet/contract/CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD"
+     target="_blank"
+     className="border rounded px-4 py-2 inline-block"
+    >
+     View Contract
+   </a>
+  </div>
 	
     </main>
   );
