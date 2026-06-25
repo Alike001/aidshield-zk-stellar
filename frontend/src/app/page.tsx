@@ -1,66 +1,124 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6">
-      <div className="max-w-4xl text-center">
+    <main>
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-6 py-24 text-center">
+        <div className="inline-block border rounded-full px-4 py-2 mb-6">
+          Built on Stellar + Zero-Knowledge Proofs
+        </div>
+
         <h1 className="text-6xl font-bold mb-6">
-          AidShield
+          Privacy-Preserving Aid Distribution
         </h1>
 
-        <p className="text-xl mb-8">
-          Privacy-Preserving Aid Distribution on Stellar
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+          AidShield enables organizations to verify beneficiary eligibility
+          without exposing personal information while preventing duplicate aid
+          claims on the Stellar blockchain.
         </p>
 
-        <p className="text-lg text-gray-600 mb-12">
-          Verify beneficiary eligibility using Zero-Knowledge Proofs
-          while preventing duplicate aid claims on the Stellar blockchain.
-        </p>
-
-        <div className="flex gap-4 justify-center">
-          <a
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link
             href="/verify"
-            className="px-6 py-3 rounded-lg border"
+            className="px-6 py-3 border rounded-lg"
           >
-            Check Eligibility
-          </a>
+            Verify Beneficiary
+          </Link>
 
-         <a
-           href="/claim"
-           className="px-6 py-3 rounded-lg border"
-         >
-           Claim Aid
-         </a>
-
-        <a
-         href="/dashboard"
-         className="px-6 py-3 rounded-lg border"
-       >
-         Dashboard
-       </a>
+          <Link
+            href="/dashboard"
+            className="px-6 py-3 border rounded-lg"
+          >
+            View Dashboard
+          </Link>
         </div>
+      </section>
 
-        <div className="mt-16 grid md:grid-cols-3 gap-6">
+      {/* Features */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <h2 className="text-4xl font-bold text-center mb-12">
+          Why AidShield?
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-6">
           <div className="border rounded-xl p-6">
-            <h2 className="font-bold mb-2">Zero Knowledge</h2>
+            <h3 className="text-xl font-bold mb-3">
+              Zero-Knowledge Privacy
+            </h3>
+
             <p>
-              Beneficiaries prove eligibility without exposing sensitive data.
+              Beneficiaries prove eligibility without revealing sensitive
+              personal information.
             </p>
           </div>
 
           <div className="border rounded-xl p-6">
-            <h2 className="font-bold mb-2">Stellar Smart Contracts</h2>
+            <h3 className="text-xl font-bold mb-3">
+              Fraud Prevention
+            </h3>
+
             <p>
-              Claims are recorded and validated on Stellar Testnet.
+              Duplicate claims are blocked using proof validation and
+              nullifier tracking.
             </p>
           </div>
 
           <div className="border rounded-xl p-6">
-            <h2 className="font-bold mb-2">Fraud Prevention</h2>
+            <h3 className="text-xl font-bold mb-3">
+              Stellar Powered
+            </h3>
+
             <p>
-              Nullifiers prevent beneficiaries from claiming aid twice.
+              Smart contracts on Stellar provide transparent and efficient
+              aid distribution.
             </p>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <h2 className="text-4xl font-bold text-center mb-12">
+          How It Works
+        </h2>
+
+        <div className="grid md:grid-cols-4 gap-6">
+          <div className="border rounded-xl p-6 text-center">
+            <div className="text-3xl font-bold mb-3">1</div>
+            <p>Register beneficiaries</p>
+          </div>
+
+          <div className="border rounded-xl p-6 text-center">
+            <div className="text-3xl font-bold mb-3">2</div>
+            <p>Generate ZK proof</p>
+          </div>
+
+          <div className="border rounded-xl p-6 text-center">
+            <div className="text-3xl font-bold mb-3">3</div>
+            <p>Verify eligibility</p>
+          </div>
+
+          <div className="border rounded-xl p-6 text-center">
+            <div className="text-3xl font-bold mb-3">4</div>
+            <p>Claim aid on Stellar</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Contract */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="border rounded-xl p-8">
+          <h2 className="text-3xl font-bold mb-4">
+            Deployed Stellar Contract
+          </h2>
+
+          <p className="break-all text-sm">
+            CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

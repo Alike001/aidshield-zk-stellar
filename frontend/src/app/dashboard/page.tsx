@@ -1,50 +1,128 @@
+import { beneficiaries } from "@/data/beneficiaries";
+import { claims } from "@/data/claims";
+
 export default function Dashboard() {
+  const total = beneficiaries.length;
+
+  const eligible = beneficiaries.filter(
+    (b) => b.eligible
+  ).length;
+
+  const ineligible = total - eligible;
+
   return (
-    <main className="min-h-screen p-8">
+    <main className="max-w-6xl mx-auto p-8">
       <h1 className="text-4xl font-bold mb-8">
         AidShield Dashboard
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6 mb-10">
         <div className="border rounded-xl p-6">
-          <h2 className="text-2xl font-bold">3</h2>
+          <h2 className="text-3xl font-bold">
+            {total}
+          </h2>
           <p>Registered Beneficiaries</p>
         </div>
 
         <div className="border rounded-xl p-6">
-          <h2 className="text-2xl font-bold">2</h2>
+          <h2 className="text-3xl font-bold">
+            {eligible}
+          </h2>
           <p>Eligible Beneficiaries</p>
         </div>
 
         <div className="border rounded-xl p-6">
-          <h2 className="text-2xl font-bold">1</h2>
-          <p>Claims Processed</p>
+          <h2 className="text-3xl font-bold">
+            {ineligible}
+          </h2>
+          <p>Not Eligible</p>
         </div>
       </div>
 
-      <div className="border rounded-xl p-6 mt-8">
+      <div className="border rounded-xl p-6">
         <h2 className="text-2xl font-bold mb-4">
-          Stellar Contract
+          Beneficiaries
         </h2>
 
-        <p className="break-all">
-          CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD
-        </p>
-      </div>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-3">ID</th>
+              <th className="text-left py-3">Name</th>
+              <th className="text-left py-3">Status</th>
+            </tr>
+          </thead>
 
+          <tbody>
+            {beneficiaries.map((person) => (
+              <tr
+                key={person.id}
+                className="border-b"
+              >
+                <td className="py-3">
+                  {person.id}
+                </td>
+
+                <td className="py-3">
+                  {person.name}
+                </td>
+
+                <td className="py-3">
+                  {person.eligible
+                    ? "Eligible"
+                    : "Not Eligible"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+	
       <div className="border rounded-xl p-6 mt-8">
         <h2 className="text-2xl font-bold mb-4">
-          Aid Distribution Workflow
+          Claim History
         </h2>
 
-        <ol className="space-y-2">
-          <li>1. Register beneficiaries</li>
-          <li>2. Generate zero-knowledge proof</li>
-          <li>3. Verify eligibility</li>
-          <li>4. Submit claim to Stellar</li>
-          <li>5. Prevent duplicate claims</li>
-        </ol>
-      </div>
+      <table className="w-full">
+       <thead>
+        <tr className="border-b">
+         <th className="text-left py-3">
+           Claim ID
+         </th>
+
+         <th className="text-left py-3">
+           Beneficiary
+         </th>
+
+         <th className="text-left py-3">
+           Status
+         </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {claims.map((claim) => (
+        <tr
+          key={claim.id}
+          className="border-b"
+        >
+          <td className="py-3">
+            {claim.id}
+          </td>
+
+          <td className="py-3">
+            {claim.beneficiary}
+          </td>
+
+          <td className="py-3">
+            {claim.status}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+   </table>
+   </div>
+	
     </main>
   );
 }
