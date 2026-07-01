@@ -35,6 +35,21 @@ const steps = [
   },
 ];
 
+const proofSignals = [
+  {
+    label: "Proof verified",
+    value: "Stellar testnet",
+  },
+  {
+    label: "Public inputs",
+    value: "Root + nullifier",
+  },
+  {
+    label: "Private witness",
+    value: "Leaf + path",
+  },
+];
+
 export default function Home() {
   return (
     <main className="page-shell">
@@ -49,6 +64,15 @@ export default function Home() {
             inspect the Stellar verifier transaction, and then consume a
             nullifier so the same claim path cannot be replayed.
           </p>
+
+          <div className="hero-proof-strip" aria-label="Demo proof summary">
+            {proofSignals.map((signal) => (
+              <div className="proof-signal" key={signal.label}>
+                <span>{signal.label}</span>
+                <strong>{signal.value}</strong>
+              </div>
+            ))}
+          </div>
 
           <div className="hero-actions">
             <Link href="/verify" className="button-link">
@@ -75,13 +99,42 @@ export default function Home() {
           </div>
         </div>
 
-        <aside className="hero-surface evidence-panel">
+        <aside className="hero-surface evidence-panel hero-console">
           <div className="panel-heading">
-            <h2>Live evidence</h2>
+            <h2>Operator proof console</h2>
             <span className="info-chip">
               <span className="chip-dot" aria-hidden="true" />
               Testnet
             </span>
+          </div>
+
+          <div className="console-status">
+            <div>
+              <span>Current workflow</span>
+              <strong>Verify proof before aid release</strong>
+            </div>
+            <span className="status-chip">
+              <span className="chip-dot" aria-hidden="true" />
+              Online
+            </span>
+          </div>
+
+          <div className="console-flow" aria-label="AidShield proof workflow">
+            <div className="console-step active">
+              <span>01</span>
+              <strong>Private witness</strong>
+              <p>Beneficiary data stays off the public ledger.</p>
+            </div>
+            <div className="console-step active">
+              <span>02</span>
+              <strong>Soroban verifier</strong>
+              <p>Noir proof accepted against public inputs.</p>
+            </div>
+            <div className="console-step">
+              <span>03</span>
+              <strong>Claim gate</strong>
+              <p>Nullifier prevents duplicate distribution.</p>
+            </div>
           </div>
 
           <div className="evidence-row">
