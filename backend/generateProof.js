@@ -23,5 +23,4 @@ const proofHex = proof.map(p => "0x" + p.toString("hex"));
 
 console.log("Proof HEX:", proofHex);
 
-const leaf = hash("user1");
 console.log("Leaf:", "0x" + leaf.toString("hex"));
