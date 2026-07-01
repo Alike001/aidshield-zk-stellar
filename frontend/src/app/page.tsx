@@ -202,42 +202,32 @@ export default function Home() {
 
         <article className="spotlight-panel">
           <div className="panel-heading">
-            <h3>What to say in the demo</h3>
-            <span className="info-chip">2 minute script</span>
+            <h3>Proof boundary</h3>
+            <span className="info-chip">Noir</span>
           </div>
-          <div className="workflow-grid">
-            <div className="workflow-card">
-              <strong>1. “This proof is the lock.”</strong>
-              <p>
-                Eligibility is not a form field. It is a private proof generated
-                from the beneficiary registry.
-              </p>
+          <div className="proof-boundary-grid">
+            <div className="boundary-row">
+              <span>Public</span>
+              <strong>Registry root, nullifier, verifier transaction</strong>
             </div>
-            <div className="workflow-card">
-              <strong>2. “This contract stops replay.”</strong>
-              <p>
-                The Stellar contract rejects reused nullifiers so a valid claim
-                cannot be counted twice.
-              </p>
+            <div className="boundary-row">
+              <span>Private</span>
+              <strong>Beneficiary leaf, path siblings, direction bits, nullifier secret</strong>
             </div>
-            <div className="workflow-card">
-              <strong>3. “This dashboard explains the decision.”</strong>
-              <p>
-                Operators see the registry, the claim state, and the audit trail
-                in one place instead of piecing together logs.
-              </p>
+            <div className="boundary-row">
+              <span>Operator result</span>
+              <strong>Claim can proceed once, then duplicate attempts are blocked</strong>
             </div>
           </div>
         </article>
       </section>
 
       <section className="route-callout">
-        <strong>Competition read</strong>
+        <strong>Implementation boundary</strong>
         <p>
-          The current project is in the right hackathon category because it
-          pairs a private eligibility proof with visible Stellar verification.
-          The strongest remaining technical upgrade is connecting verifier
-          success directly to claim-gate submission.
+          The verifier proof is live on Stellar testnet. The next product
+          hardening step is connecting verifier success directly to claim-gate
+          submission instead of treating it as a separate preflight.
         </p>
       </section>
     </main>
