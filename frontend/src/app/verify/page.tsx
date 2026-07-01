@@ -53,11 +53,10 @@ export default function VerifyPage() {
       <section className="section-head">
         <div>
           <p className="eyebrow">Verification desk</p>
-          <h1>Generate the proof before the claim reaches Stellar.</h1>
+          <h1>Check eligibility without exposing the beneficiary record.</h1>
           <p className="section-lede">
-            This screen is the private side of the system. The beneficiary
-            chooses a registry record, the proof envelope is assembled locally,
-            and only then does the app allow the claim path to continue.
+            Select a registry record, generate the Noir proof envelope, and
+            review exactly what becomes public before the claim route opens.
           </p>
         </div>
         <div className="section-actions">
@@ -70,7 +69,7 @@ export default function VerifyPage() {
       <section className="split-layout">
         <article className="surface-panel">
           <div className="panel-heading">
-            <h3>Beneficiary registry</h3>
+            <h3>Registry queue</h3>
             <span className="status-pill">
               <span className="status-dot" aria-hidden="true" />
               {beneficiaries.length} records seeded
@@ -124,15 +123,35 @@ export default function VerifyPage() {
 
         <article className="proof-card">
           <div className="panel-heading">
-            <h3>Proof envelope</h3>
-            <span className="info-chip">Noir witness path</span>
+            <h3>Proof workbench</h3>
+            <span className={generated && selected?.eligible ? "status-chip" : "status-chip warn"}>
+              <span className="chip-dot" aria-hidden="true" />
+              {generated && selected?.eligible ? "Ready for claim" : "Awaiting proof"}
+            </span>
           </div>
 
           <p className="panel-note">
-            The proof summary below is intentionally human-readable for the demo.
-            The important part is the boundary: root and nullifier are public,
-            while the beneficiary leaf and membership path stay private.
+            AidShield exposes only the root and nullifier. The leaf, path, and
+            nullifier secret remain inside the private witness.
           </p>
+
+          <div className="workflow-status-grid" aria-label="Verification progress">
+            <div className="workflow-status active">
+              <span>1</span>
+              <strong>Record selected</strong>
+              <p>{selected?.name} from {selected?.location}</p>
+            </div>
+            <div className={generated ? "workflow-status active" : "workflow-status"}>
+              <span>2</span>
+              <strong>Noir proof</strong>
+              <p>{generated ? "Envelope generated" : "Waiting for witness"}</p>
+            </div>
+            <div className={generated && selected?.eligible ? "workflow-status active" : "workflow-status"}>
+              <span>3</span>
+              <strong>Claim handoff</strong>
+              <p>{generated && selected?.eligible ? "Allowed" : "Blocked until proof passes"}</p>
+            </div>
+          </div>
 
           <div className="proof-grid" aria-label="Verification summary">
             <div className="metric-card">
@@ -162,39 +181,18 @@ export default function VerifyPage() {
             </div>
           </div>
 
-          <div className="proof-list">
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                1
-              </span>
-              <div>
-                <strong>Registry lookup</strong>
-                <p>The beneficiary record is matched against the seeded eligibility set.</p>
-              </div>
+          <div className="proof-boundary-grid">
+            <div className="boundary-row">
+              <span>Public</span>
+              <strong>registry root, nullifier, verifier contract</strong>
             </div>
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                2
-              </span>
-              <div>
-                <strong>Private witness generation</strong>
-                <p>
-                  The private leaf, path siblings, direction bits, and nullifier
-                  secret stay inside the Noir witness.
-                </p>
-              </div>
+            <div className="boundary-row">
+              <span>Private</span>
+              <strong>leaf, path siblings, direction bits, nullifier secret</strong>
             </div>
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                3
-              </span>
-              <div>
-                <strong>Nullifier and contract gate</strong>
-                <p>
-                  Poseidon2 constraints produce the public root and nullifier that
-                  Stellar verifies.
-                </p>
-              </div>
+            <div className="boundary-row">
+              <span>Verifier</span>
+              <strong>Poseidon2-constrained proof checked on Stellar testnet</strong>
             </div>
           </div>
 

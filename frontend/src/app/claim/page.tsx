@@ -54,10 +54,10 @@ export default function ClaimPage() {
       <section className="section-head">
         <div>
           <p className="eyebrow">Claim execution</p>
-          <h1>Submit the proof once. Let Stellar stop the replay.</h1>
+          <h1>Verify the proof, then consume the nullifier once.</h1>
           <p className="section-lede">
-            This page shows the final checkpoint for the demo: proof status,
-            contract surface, nullifier lock, and claim outcome in one place.
+            This is the transaction preflight. The claim stays blocked until the
+            Stellar verifier accepts the public root and nullifier.
           </p>
         </div>
         <div className="section-actions">
@@ -73,11 +73,29 @@ export default function ClaimPage() {
       <section className="split-layout">
         <article className="claim-card">
           <div className="panel-heading">
-            <h3>Claim receipt</h3>
+            <h3>Execution checklist</h3>
             <span className={claimed ? "status-chip" : "status-chip warn"}>
               <span className="chip-dot" aria-hidden="true" />
               {claimed ? "Accepted once" : "Awaiting submission"}
             </span>
+          </div>
+
+          <div className="workflow-status-grid" aria-label="Claim execution progress">
+            <div className={verifierReady ? "workflow-status active" : "workflow-status"}>
+              <span>1</span>
+              <strong>Verifier preflight</strong>
+              <p>{verifierReady ? "Proof accepted on Stellar" : "Required before claim"}</p>
+            </div>
+            <div className={claimed ? "workflow-status active" : "workflow-status"}>
+              <span>2</span>
+              <strong>Nullifier claim</strong>
+              <p>{claimed ? "Nullifier consumed" : "Waiting for submission"}</p>
+            </div>
+            <div className={claimed ? "workflow-status active" : "workflow-status"}>
+              <span>3</span>
+              <strong>Replay guard</strong>
+              <p>{claimed ? "Duplicate path sealed" : "Ready after acceptance"}</p>
+            </div>
           </div>
 
           <div className="proof-grid">
@@ -101,38 +119,18 @@ export default function ClaimPage() {
             </div>
           </div>
 
-          <div className="route-callout">
-            <strong>Claim gate</strong>
-            <p className="contract-id">{deployment.claimGateContractId}</p>
-          </div>
-
-          <div className="proof-list">
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                1
-              </span>
-              <div>
-                <strong>Stellar verifier preflight</strong>
-                <p>The deployed verifier accepts the Poseidon2 root/nullifier proof on testnet.</p>
-              </div>
+          <div className="proof-boundary-grid">
+            <div className="boundary-row">
+              <span>Verifier</span>
+              <strong>{deployment.verifierContractId}</strong>
             </div>
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                2
-              </span>
-              <div>
-                <strong>Nullifier lock</strong>
-                <p>Every accepted claim writes the nullifier so the same proof cannot be replayed.</p>
-              </div>
+            <div className="boundary-row">
+              <span>Claim gate</span>
+              <strong>{deployment.claimGateContractId}</strong>
             </div>
-            <div className="proof-item">
-              <span className="proof-check" aria-hidden="true">
-                3
-              </span>
-              <div>
-                <strong>Settlement ready</strong>
-                <p>Once accepted, the aid transfer can proceed through the Stellar rail.</p>
-              </div>
+            <div className="boundary-row">
+              <span>Nullifier</span>
+              <strong>{deployment.publicNullifier}</strong>
             </div>
           </div>
 
@@ -164,7 +162,7 @@ export default function ClaimPage() {
           </div>
 
           <div className="metric-card">
-            <span className="metric-label">Current message</span>
+            <span className="metric-label">Operator message</span>
             <strong className="metric-value">{claimed ? "Claim accepted" : "Awaiting proof"}</strong>
             <p className="metric-copy">{message}</p>
           </div>
@@ -191,7 +189,7 @@ export default function ClaimPage() {
 
           <div className="ledger-stack">
             <div className="event-card">
-              <p className="muted">Verifier evidence</p>
+              <p className="muted">Stellar evidence</p>
               <strong>On-chain ZK verification is visible on testnet.</strong>
               <p>
                 The proof verification transaction gives judges concrete Stellar

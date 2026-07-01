@@ -802,6 +802,86 @@ pre {
   background: #fbfdfb;
 }
 
+.workflow-status-grid,
+.proof-boundary-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.workflow-status-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workflow-status,
+.boundary-row {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
+.workflow-status {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.workflow-status span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #eef3ef;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.workflow-status strong,
+.boundary-row strong {
+  margin: 0;
+  color: var(--foreground);
+}
+
+.workflow-status p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.workflow-status.active {
+  border-color: rgba(15, 143, 105, 0.34);
+  background: #f4fbf7;
+}
+
+.workflow-status.active span {
+  background: rgba(15, 143, 105, 0.14);
+  color: var(--accent);
+}
+
+.boundary-row {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.boundary-row span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.boundary-row strong {
+  font-family: var(--font-ibm-mono), monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
 .proof-list {
   display: grid;
   gap: 12px;
@@ -1000,6 +1080,7 @@ pre {
   .feature-grid,
   .metric-strip,
   .timeline-grid,
+  .workflow-status-grid,
   .proof-grid {
     grid-template-columns: 1fr;
   }
