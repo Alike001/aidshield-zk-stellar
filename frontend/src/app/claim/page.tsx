@@ -91,7 +91,7 @@ export default function ClaimPage() {
                   : "Required"}
               </strong>
               <p className="metric-copy">
-                The AidShield proof artifact has a real verifier contract on Stellar testnet.
+                Stellar verifies the proof&apos;s public root and nullifier before the claim proceeds.
               </p>
             </div>
             <div className="metric-card">
@@ -113,7 +113,7 @@ export default function ClaimPage() {
               </span>
               <div>
                 <strong>Stellar verifier preflight</strong>
-                <p>The deployed verifier accepts the AidShield proof artifact on testnet.</p>
+                <p>The deployed verifier accepts the Poseidon2 root/nullifier proof on testnet.</p>
               </div>
             </div>
             <div className="proof-item">
@@ -174,6 +174,7 @@ export default function ClaimPage() {
               ? [
                   "claim_status: accepted",
                   "nullifier: consumed",
+                  `public_nullifier: ${deployment.publicNullifier}`,
                   "verifier_contract: proof accepted",
                   "claim_gate: nullifier path ready",
                   "next_action: show duplicate rejection",
@@ -181,6 +182,7 @@ export default function ClaimPage() {
               : [
                   "claim_status: pending",
                   "nullifier: unused",
+                  `public_root: ${deployment.publicRoot}`,
                   `verifier_contract: ${verifierReady ? "proof accepted" : "preflight required"}`,
                   `claim_gate: ${verifierReady ? "ready" : "blocked"}`,
                   "next_action: run verifier, then submit nullifier claim",

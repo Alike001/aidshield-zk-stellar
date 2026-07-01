@@ -5,19 +5,6 @@ import Link from "next/link";
 import { beneficiaries } from "@/data/beneficiaries";
 import { deployment } from "@/data/deployment";
 
-function makeNullifier(name: string, id: number) {
-  const seed = `${name}-${id}-aidshield`;
-  let hash = 0;
-
-  for (let index = 0; index < seed.length; index += 1) {
-    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
-  }
-
-  return `0x${hash.toString(16).padStart(8, "0")}${(hash ^ 0xa5a5a5a5)
-    .toString(16)
-    .padStart(8, "0")}`;
-}
-
 export default function VerifyPage() {
   const [selectedId, setSelectedId] = useState(1);
   const [generated, setGenerated] = useState(false);
@@ -34,9 +21,11 @@ export default function VerifyPage() {
     return {
       beneficiary: selected.name,
       region: selected.location,
-      nullifier: makeNullifier(selected.name, selected.id),
-      commitment: `commitment-${selected.id.toString().padStart(4, "0")}`,
-      witness: selected.eligible ? "private eligibility witness built" : "eligibility witness failed",
+      root: deployment.publicRoot,
+      nullifier: deployment.publicNullifier,
+      witness: selected.eligible
+        ? "private leaf + siblings + direction bits constrained"
+        : "eligibility witness failed",
       contract: "Soroban claim gate",
       verifier: deployment.verifierContractId,
     };
@@ -141,8 +130,8 @@ export default function VerifyPage() {
 
           <p className="panel-note">
             The proof summary below is intentionally human-readable for the demo.
-            The important part is the sequence: witness, commitment, nullifier,
-            then contract submission.
+            The important part is the boundary: root and nullifier are public,
+            while the beneficiary leaf and membership path stay private.
           </p>
 
           <div className="proof-grid" aria-label="Verification summary">
@@ -157,6 +146,19 @@ export default function VerifyPage() {
                 {generated ? (selected?.eligible ? "Accepted" : "Rejected") : "Pending"}
               </strong>
               <p className="metric-copy">{status}</p>
+            </div>
+          </div>
+
+          <div className="proof-grid" aria-label="Public proof inputs">
+            <div className="metric-card">
+              <span className="metric-label">Public root</span>
+              <strong className="metric-value mono-value">{deployment.publicRoot.slice(0, 14)}...</strong>
+              <p className="metric-copy">Registry commitment verified by the Noir circuit.</p>
+            </div>
+            <div className="metric-card">
+              <span className="metric-label">Public nullifier</span>
+              <strong className="metric-value mono-value">{deployment.publicNullifier.slice(0, 14)}...</strong>
+              <p className="metric-copy">Replay-safe claim marker derived from private inputs.</p>
             </div>
           </div>
 
@@ -177,8 +179,8 @@ export default function VerifyPage() {
               <div>
                 <strong>Private witness generation</strong>
                 <p>
-                  A private witness is built for the selected registry entry so the
-                  public flow never needs raw beneficiary details.
+                  The private leaf, path siblings, direction bits, and nullifier
+                  secret stay inside the Noir witness.
                 </p>
               </div>
             </div>
@@ -189,7 +191,8 @@ export default function VerifyPage() {
               <div>
                 <strong>Nullifier and contract gate</strong>
                 <p>
-                  The nullifier is what makes the Stellar claim replay-resistant.
+                  Poseidon2 constraints produce the public root and nullifier that
+                  Stellar verifies.
                 </p>
               </div>
             </div>
@@ -202,9 +205,9 @@ export default function VerifyPage() {
                 {"\n"}
                 region: {proofEnvelope.region}
                 {"\n"}
-                commitment: {proofEnvelope.commitment}
+                public_root: {proofEnvelope.root}
                 {"\n"}
-                nullifier: {proofEnvelope.nullifier}
+                public_nullifier: {proofEnvelope.nullifier}
                 {"\n"}
                 witness: {proofEnvelope.witness}
                 {"\n"}
@@ -230,7 +233,7 @@ export default function VerifyPage() {
             <strong>{generated ? "Next step" : "What happens next"}</strong>
             <p>
               {generated && selected?.eligible
-                ? "Send the proof envelope to the claim page. The verifier proof transaction is live, and the claim gate should consume the nullifier once."
+                ? "Send the proof envelope to the claim page. Stellar has verified the public root/nullifier pair, and the claim gate should consume the nullifier once."
                 : generated
                 ? "This record should not move forward. The user should be shown a clear rejection path."
                 : "When the proof is generated, the claim route becomes available for eligible beneficiaries."}

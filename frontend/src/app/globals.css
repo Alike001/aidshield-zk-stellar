@@ -471,6 +471,12 @@ pre {
   letter-spacing: -0.05em;
 }
 
+.mono-value {
+  font-family: var(--font-ibm-mono), monospace;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
 .metric-copy {
   color: var(--muted);
   font-size: 13px;
