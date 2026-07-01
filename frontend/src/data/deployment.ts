@@ -3,13 +3,13 @@ export const deployment = {
   claimGateContractId: "CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD",
   claimGateExplorer:
     "https://lab.stellar.org/r/testnet/contract/CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD",
-  verifierContractId: "CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC",
+  verifierContractId: "CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA",
   verifierExplorer:
-    "https://lab.stellar.org/r/testnet/contract/CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC",
+    "https://lab.stellar.org/r/testnet/contract/CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA",
   verifierUploadTx:
     "https://stellar.expert/explorer/testnet/tx/0b9d26ccffb8dce7dd6e18374e1098a642ce65b51c69bb09f6cdd56d4326a647",
   verifierDeployTx:
-    "https://stellar.expert/explorer/testnet/tx/ad45d40b7ec57910ca745634daef6a91d535e4f2ab5e247a7176df4e127955bd",
+    "https://stellar.expert/explorer/testnet/tx/f5bebe17bded8cccc54e29a0bd35d6b9348cbbc01f7ca6bba9e89a5d949fe00f",
   proofVerificationTx:
-    "https://stellar.expert/explorer/testnet/tx/17d58cd111b7a995cf13b1d3fbedfcf27d9ef84d24f870a1bd432a44ce4bf385",
+    "https://stellar.expert/explorer/testnet/tx/6994f5839af521a900a8b4d1a73d20a97573f82c1fbd7dea7a10fc8a866037ad",
 };

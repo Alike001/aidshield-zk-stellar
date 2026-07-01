@@ -34,13 +34,13 @@ contracts/aidshield_verifier/
 Current verifier contract:
 
 ```text
-CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC
+CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
 Successful proof verification transaction:
 
 ```text
-https://stellar.expert/explorer/testnet/tx/17d58cd111b7a995cf13b1d3fbedfcf27d9ef84d24f870a1bd432a44ce4bf385
+https://stellar.expert/explorer/testnet/tx/6994f5839af521a900a8b4d1a73d20a97573f82c1fbd7dea7a10fc8a866037ad
 ```
 
 ### 3. Stellar claim gate contract

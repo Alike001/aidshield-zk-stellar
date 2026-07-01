@@ -36,7 +36,7 @@ The current claim-gate MVP still accepts a `proof_valid` boolean so the deployed
 | --- | --- |
 | Open-source repo | Present |
 | Frontend demo | Next.js app with landing, verification, claim, and dashboard routes |
-| ZK circuit | Noir eligibility circuit exists, currently with simplified demo hashing |
+| ZK circuit | Noir circuit proves private leaf membership path and public nullifier using Poseidon2 constraints |
 | Stellar contract | Soroban contract deployed on Stellar Testnet and stores used nullifiers |
 | Duplicate prevention | Implemented in the contract and covered by tests |
 | On-chain proof verification | Implemented as a separate Soroban verifier contract on Stellar Testnet |
@@ -63,26 +63,26 @@ Note: the local contract source now returns typed claim errors for duplicate and
 Verifier contract ID:
 
 ```text
-CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC
+CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
 Verifier contract explorer:
 
 ```text
-https://lab.stellar.org/r/testnet/contract/CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC
+https://lab.stellar.org/r/testnet/contract/CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
 Verifier deployment transactions:
 
 ```text
 https://stellar.expert/explorer/testnet/tx/0b9d26ccffb8dce7dd6e18374e1098a642ce65b51c69bb09f6cdd56d4326a647
-https://stellar.expert/explorer/testnet/tx/ad45d40b7ec57910ca745634daef6a91d535e4f2ab5e247a7176df4e127955bd
+https://stellar.expert/explorer/testnet/tx/f5bebe17bded8cccc54e29a0bd35d6b9348cbbc01f7ca6bba9e89a5d949fe00f
 ```
 
 Successful `verify_proof` transaction:
 
 ```text
-https://stellar.expert/explorer/testnet/tx/17d58cd111b7a995cf13b1d3fbedfcf27d9ef84d24f870a1bd432a44ce4bf385
+https://stellar.expert/explorer/testnet/tx/6994f5839af521a900a8b4d1a73d20a97573f82c1fbd7dea7a10fc8a866037ad
 ```
 
 ## Project Structure
@@ -147,6 +147,7 @@ circuits/aidshield/target/vk
 ```
 
 See `docs/zk-verifier-integration.md` for the Soroban verifier integration plan.
+See `docs/noir-circuit-audit.md` for the current circuit audit and remaining cryptographic hardening work.
 
 ## Building The Verifier Contract
 
@@ -191,7 +192,7 @@ Aid eligibility is sensitive. A beneficiary should not have to reveal raw identi
 ## Current Limitations
 
 - The frontend uses seeded demo data rather than a live beneficiary database.
-- The current Noir circuit uses simplified demo hashing and should be upgraded before treating the proof system as production-like.
+- The current Noir circuit uses a two-level demo membership path; production deployments should support dynamic registry sizes and lifecycle updates.
 - The claim-gate MVP receives `proof_valid`; verifier proof checking is currently a separate Soroban contract invocation.
 - The proof helper scripts are local Node.js scripts and are not yet exposed through an API.
 - Wallet authentication and real aid token transfer are future work.
@@ -201,7 +202,7 @@ Aid eligibility is sensitive. A beneficiary should not have to reveal raw identi
 Critical before final submission:
 
 - Connect deployed verifier success to claim-gate submission at the app/API or composed-contract level.
-- Upgrade the Noir circuit away from placeholder hashing or clearly label it as a demo constraint system.
+- Replace the fixed-depth demo membership path with a registry-size-aware circuit and operator tooling.
 - Add a short 2-3 minute video showing the verification, claim, duplicate rejection, and contract evidence.
 - Add screenshots of the landing page, verification flow, claim flow, and dashboard.
 

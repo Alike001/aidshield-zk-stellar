@@ -56,26 +56,26 @@ Exported functions: __constructor, verify_proof, vk_bytes
 AidShield verifier contract:
 
 ```text
-CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC
+CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
 Explorer:
 
 ```text
-https://lab.stellar.org/r/testnet/contract/CDUWF4UER3TFEAH2ZDLVEW4EKDLUNPEL5EMIBS5R4DPPIFGVUMF4MDCC
+https://lab.stellar.org/r/testnet/contract/CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
 Deployment transactions:
 
 ```text
 https://stellar.expert/explorer/testnet/tx/0b9d26ccffb8dce7dd6e18374e1098a642ce65b51c69bb09f6cdd56d4326a647
-https://stellar.expert/explorer/testnet/tx/ad45d40b7ec57910ca745634daef6a91d535e4f2ab5e247a7176df4e127955bd
+https://stellar.expert/explorer/testnet/tx/f5bebe17bded8cccc54e29a0bd35d6b9348cbbc01f7ca6bba9e89a5d949fe00f
 ```
 
 Successful `verify_proof` invocation:
 
 ```text
-https://stellar.expert/explorer/testnet/tx/17d58cd111b7a995cf13b1d3fbedfcf27d9ef84d24f870a1bd432a44ce4bf385
+https://stellar.expert/explorer/testnet/tx/6994f5839af521a900a8b4d1a73d20a97573f82c1fbd7dea7a10fc8a866037ad
 ```
 
 ## Recommended Contract Architecture
@@ -129,4 +129,4 @@ The next product integration step is to connect this verifier success path to cl
 
 ## Current Limitation
 
-The current AidShield circuit still uses simplified additive hashing. The verifier integration proves that Stellar can verify AidShield's Noir proof on-chain, but the circuit should be upgraded to a Poseidon/Poseidon2-based Merkle path before presenting the cryptography as production-like.
+The current AidShield circuit uses Poseidon2 constraints for a fixed two-level demo membership path and public nullifier. The verifier integration proves that Stellar can verify AidShield's Noir proof on-chain. The next cryptographic hardening step is to generalize the circuit and input tooling for larger dynamic registries.
