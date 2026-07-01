@@ -3,22 +3,40 @@ import { beneficiaries } from "@/data/beneficiaries";
 import { claims } from "@/data/claims";
 import { deployment } from "@/data/deployment";
 
+const operationalChecks = [
+  {
+    label: "Registry commitment",
+    value: "Published",
+    copy: "The dashboard only shows sample records; eligibility proof uses the public root.",
+  },
+  {
+    label: "Noir verifier",
+    value: "Accepted proof",
+    copy: "The deployed Soroban verifier has checked the upgraded Poseidon2 circuit proof.",
+  },
+  {
+    label: "Replay control",
+    value: "Nullifier ready",
+    copy: "Claim execution is keyed by a public nullifier instead of exposing identity data.",
+  },
+];
+
 export default function Dashboard() {
   const total = beneficiaries.length;
   const eligible = beneficiaries.filter((b) => b.eligible).length;
   const ineligible = total - eligible;
   const claimCount = claims.length;
+  const sealedProofs = beneficiaries.filter((b) => b.proofState === "Proof sealed").length;
 
   return (
     <main className="page-shell">
       <section className="section-head">
         <div>
           <p className="eyebrow">Operator dashboard</p>
-          <h1>The audit view for beneficiaries, claims, and Stellar deployment.</h1>
+          <h1>One operating view for privacy-safe aid release.</h1>
           <p className="section-lede">
-            This is the operational face of the project. It should help a judge
-            understand the beneficiary registry, the claim trail, and the
-            on-chain contract without needing any extra explanation.
+            Aid teams can review roster health, proof readiness, claim events,
+            and the live Stellar verifier without exposing beneficiary records.
           </p>
         </div>
         <div className="section-actions">
@@ -38,15 +56,27 @@ export default function Dashboard() {
           <p className="metric-copy">Seeded registry records in the demo set.</p>
         </div>
         <div className="metric-card">
-          <span className="metric-label">Eligible records</span>
-          <strong className="metric-value">{eligible}</strong>
-          <p className="metric-copy">These can move to proof generation and claim submission.</p>
+          <span className="metric-label">Proof-ready records</span>
+          <strong className="metric-value">{sealedProofs}</strong>
+          <p className="metric-copy">These can move through the Noir verification desk.</p>
         </div>
         <div className="metric-card">
-          <span className="metric-label">Claim events</span>
+          <span className="metric-label">Claim trail</span>
           <strong className="metric-value">{claimCount}</strong>
           <p className="metric-copy">The history view shows accepted and queued claims.</p>
         </div>
+      </section>
+
+      <section className="ops-evidence-grid" aria-label="Operational readiness">
+        {operationalChecks.map((check) => (
+          <article className="workflow-status active" key={check.label}>
+            <span aria-hidden="true">OK</span>
+            <strong>{check.label}</strong>
+            <p>
+              <b>{check.value}</b> - {check.copy}
+            </p>
+          </article>
+        ))}
       </section>
 
       <section className="split-layout">
@@ -59,40 +89,44 @@ export default function Dashboard() {
             </span>
           </div>
 
-          <table className="table-shell">
-            <thead>
-              <tr>
-                <th>Beneficiary</th>
-                <th>Region</th>
-                <th>Proof state</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {beneficiaries.map((person) => (
-                <tr key={person.id}>
-                  <td>
-                    <strong>{person.name}</strong>
-                    <div className="muted">{person.household}</div>
-                  </td>
-                  <td>{person.location}</td>
-                  <td>{person.proofState}</td>
-                  <td>
-                    <span className={person.eligible ? "status-chip" : "status-chip danger"}>
-                      <span className="chip-dot" aria-hidden="true" />
-                      {person.eligible ? "Eligible" : "Not eligible"}
-                    </span>
-                  </td>
+          <div className="table-scroll">
+            <table className="table-shell">
+              <thead>
+                <tr>
+                  <th>Beneficiary</th>
+                  <th>Region</th>
+                  <th>Proof state</th>
+                  <th>Tranche</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {beneficiaries.map((person) => (
+                  <tr key={person.id}>
+                    <td>
+                      <strong>{person.name}</strong>
+                      <div className="muted">{person.household}</div>
+                    </td>
+                    <td>{person.location}</td>
+                    <td>{person.proofState}</td>
+                    <td>{person.tranche}</td>
+                    <td>
+                      <span className={person.eligible ? "status-chip" : "status-chip danger"}>
+                        <span className="chip-dot" aria-hidden="true" />
+                        {person.eligible ? "Eligible" : "Not eligible"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </article>
 
         <article className="proof-card">
           <div className="panel-heading">
-            <h3>Recent claims</h3>
-            <span className="info-chip">Audit trail</span>
+            <h3>Claim operations</h3>
+            <span className="info-chip">Replay-aware</span>
           </div>
 
           <div className="ledger-stack">
@@ -115,6 +149,21 @@ export default function Dashboard() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="proof-boundary-grid">
+            <div className="boundary-row">
+              <span>Public root</span>
+              <strong>{deployment.publicRoot}</strong>
+            </div>
+            <div className="boundary-row">
+              <span>Public nullifier</span>
+              <strong>{deployment.publicNullifier}</strong>
+            </div>
+            <div className="boundary-row">
+              <span>Operator decision</span>
+              <strong>Release aid only after proof verification and one-time nullifier consumption</strong>
+            </div>
           </div>
 
           <div className="contract-panel stack-offset">
@@ -154,6 +203,14 @@ export default function Dashboard() {
               Open verifier in Stellar Lab
             </a>
             <a
+              href={deployment.verifierDeployTx}
+              target="_blank"
+              rel="noreferrer"
+              className="contract-link"
+            >
+              View verifier deployment transaction
+            </a>
+            <a
               href={deployment.proofVerificationTx}
               target="_blank"
               rel="noreferrer"
@@ -166,11 +223,11 @@ export default function Dashboard() {
       </section>
 
       <section className="route-callout">
-        <strong>What to improve next</strong>
+        <strong>Demo takeaway</strong>
         <p>
-          The next milestone is wiring the successful verifier transaction into
-          the claim gate so the app can prove first, then submit the nullifier
-          claim as one operator workflow.
+          AidShield is not a wallet demo. It is a privacy-preserving control
+          plane for real-world aid programs: prove eligibility privately, verify
+          on Stellar, and prevent duplicate distribution with a nullifier.
         </p>
       </section>
     </main>

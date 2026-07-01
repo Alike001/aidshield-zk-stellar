@@ -328,6 +328,7 @@ pre {
 .proof-card,
 .beneficiary-card,
 .event-card {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   background: var(--surface);
@@ -483,6 +484,7 @@ pre {
 }
 
 .metric-card {
+  min-width: 0;
   padding: 18px;
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -578,6 +580,10 @@ pre {
   align-items: end;
   justify-content: space-between;
   gap: 18px;
+}
+
+.section-head > * {
+  min-width: 0;
 }
 
 .section-head h2,
@@ -704,6 +710,7 @@ pre {
 }
 
 .split-layout {
+  min-width: 0;
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   gap: 18px;
@@ -808,6 +815,12 @@ pre {
   gap: 12px;
 }
 
+.ops-evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .workflow-status-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -848,6 +861,10 @@ pre {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.workflow-status p b {
+  color: var(--foreground);
 }
 
 .workflow-status.active {
@@ -914,7 +931,12 @@ pre {
   margin-bottom: 4px;
 }
 
+.table-scroll {
+  overflow-x: auto;
+}
+
 .table-shell {
+  min-width: 560px;
   width: 100%;
   border-collapse: collapse;
 }
@@ -1080,9 +1102,15 @@ pre {
   .feature-grid,
   .metric-strip,
   .timeline-grid,
+  .ops-evidence-grid,
   .workflow-status-grid,
   .proof-grid {
     grid-template-columns: 1fr;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .nav-links {
