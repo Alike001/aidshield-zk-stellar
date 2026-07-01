@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { SiteNav } from "@/components/site-nav";
 
 export const metadata: Metadata = {
-  title: "AidShield",
+  title: "AidShield | Privacy-preserving aid claims on Stellar",
   description:
-    "Privacy-preserving aid distribution using zero-knowledge proofs on Stellar blockchain",
+    "AidShield proves aid eligibility with zero-knowledge and settles claims on Stellar.",
 };
 
 export default function RootLayout({
@@ -25,32 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <nav className="border-b">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-2xl font-bold"
-            >
-              AidShield
-            </Link>
-
-            <div className="flex gap-6">
-              <Link href="/">Home</Link>
-              <Link href="/verify">Verify</Link>
-              <Link href="/claim">Claim</Link>
-              <Link href="/dashboard">Dashboard</Link>
-            </div>
-          </div>
-        </nav>
-
-        <main className="flex-1">
-          {children}
-        </main>
+    <html lang="en" className="h-full antialiased">
+      <body className="min-h-full">
+        <div className="app-shell">
+          <SiteNav />
+          <div className="app-shell-content">{children}</div>
+        </div>
       </body>
     </html>
   );
