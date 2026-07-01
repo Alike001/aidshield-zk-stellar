@@ -4,20 +4,20 @@
   --font-manrope: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-space: "Trebuchet MS", "Aptos Display", "Segoe UI", sans-serif;
   --font-ibm-mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --background: #06110e;
-  --background-2: #0a1714;
-  --surface: rgba(12, 24, 21, 0.86);
-  --surface-strong: rgba(16, 33, 28, 0.96);
-  --surface-soft: rgba(255, 255, 255, 0.04);
-  --foreground: #edf7f2;
-  --muted: #9cb0a8;
-  --line: rgba(171, 199, 189, 0.14);
-  --line-strong: rgba(171, 199, 189, 0.24);
-  --accent: #39e39c;
-  --accent-2: #8ee6ff;
-  --warn: #f4bf62;
-  --danger: #ff7a77;
-  --shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+  --background: #08110f;
+  --background-2: #101917;
+  --surface: rgba(18, 27, 25, 0.94);
+  --surface-strong: rgba(23, 34, 31, 0.98);
+  --surface-soft: rgba(255, 255, 255, 0.035);
+  --foreground: #f2f6f3;
+  --muted: #aab6b1;
+  --line: rgba(204, 219, 212, 0.13);
+  --line-strong: rgba(204, 219, 212, 0.25);
+  --accent: #46d98c;
+  --accent-2: #79c7ff;
+  --warn: #dca94a;
+  --danger: #e76866;
+  --shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
   --radius-xl: 8px;
   --radius-lg: 8px;
   --radius-md: 8px;
@@ -43,10 +43,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(57, 227, 156, 0.14), transparent 26%),
-    radial-gradient(circle at top right, rgba(142, 230, 255, 0.09), transparent 24%),
-    linear-gradient(180deg, #07110f 0%, #050b09 100%);
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #0c1513 0%, #070d0b 100%);
   color: var(--foreground);
   font-family: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -59,8 +57,8 @@ body::before {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 96px 96px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.38), transparent 82%);
+  background-size: 112px 112px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 72%);
 }
 
 a {
@@ -215,7 +213,7 @@ pre {
   padding: 14px 18px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(8, 17, 14, 0.78);
+  background: rgba(11, 19, 17, 0.88);
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
 }
@@ -233,7 +231,7 @@ pre {
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, rgba(142, 230, 255, 0.3), transparent 38%), linear-gradient(180deg, rgba(57, 227, 156, 0.95), rgba(36, 148, 108, 0.92));
+  background: linear-gradient(180deg, rgba(70, 217, 140, 0.98), rgba(54, 166, 116, 0.96));
   color: #04110d;
   font-family: var(--font-space), sans-serif;
   font-weight: 800;
@@ -336,9 +334,14 @@ pre {
 
 .hero-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(310px, 0.72fr);
-  gap: 20px;
-  padding: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.74fr);
+  gap: 22px;
+  padding: 26px;
+}
+
+.hero-panel-ops {
+  min-height: 520px;
+  align-items: stretch;
 }
 
 .eyebrow {
@@ -364,11 +367,11 @@ pre {
 
 .hero-title {
   margin: 0;
-  max-width: 14ch;
+  max-width: 15ch;
   font-family: var(--font-space), sans-serif;
-  font-size: clamp(2.8rem, 7vw, 5.8rem);
-  line-height: 0.92;
-  letter-spacing: -0.06em;
+  font-size: clamp(2.6rem, 5vw, 4.65rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
 
 .hero-copy {
@@ -378,11 +381,11 @@ pre {
 }
 
 .hero-text {
-  max-width: 68ch;
+  max-width: 62ch;
   margin: 0;
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.72;
+  font-size: 17px;
+  line-height: 1.68;
 }
 
 .hero-actions,
@@ -402,10 +405,39 @@ pre {
   gap: 14px;
   padding: 22px;
   border-radius: calc(var(--radius-xl) - 6px);
-  background:
-    radial-gradient(circle at top right, rgba(142, 230, 255, 0.16), transparent 32%),
-    linear-gradient(180deg, rgba(14, 28, 25, 0.96), rgba(10, 20, 17, 0.98));
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(180deg, rgba(20, 31, 29, 0.98), rgba(12, 20, 18, 0.98));
+  border: 1px solid var(--line);
+}
+
+.evidence-panel {
+  align-content: start;
+}
+
+.evidence-row {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.032);
+  border: 1px solid var(--line);
+}
+
+.evidence-row span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.evidence-row strong {
+  margin: 0;
+  color: var(--foreground);
+  font-family: var(--font-ibm-mono), monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .hero-surface h2,
