@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const CONTRACT_ID =
-  "CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD";
+import { deployment } from "@/data/deployment";
 
 export default function ClaimPage() {
   const [claimed, setClaimed] = useState(false);
@@ -65,8 +63,8 @@ export default function ClaimPage() {
           </div>
 
           <div className="route-callout">
-            <strong>Contract</strong>
-            <p className="contract-id">{CONTRACT_ID}</p>
+            <strong>Claim gate</strong>
+            <p className="contract-id">{deployment.claimGateContractId}</p>
           </div>
 
           <div className="proof-list">
@@ -76,7 +74,7 @@ export default function ClaimPage() {
               </span>
               <div>
                 <strong>Proof check</strong>
-                <p>The contract only moves forward when the proof is valid.</p>
+                <p>The deployed verifier has accepted the AidShield proof artifact on testnet.</p>
               </div>
             </div>
             <div className="proof-item">
@@ -129,25 +127,34 @@ export default function ClaimPage() {
               ? [
                   "claim_status: accepted",
                   "nullifier: consumed",
-                  "contract_state: source path verified",
+                  "verifier_contract: proof accepted",
+                  "claim_gate: nullifier path ready",
                   "next_action: invoke Soroban transaction",
                 ].join("\n")
               : [
                   "claim_status: pending",
                   "nullifier: unused",
-                  "contract_state: ready",
-                  "next_action: submit proof envelope",
+                  "verifier_contract: testnet proof verified",
+                  "next_action: submit nullifier claim",
                 ].join("\n")}
           </div>
 
           <div className="ledger-stack">
             <div className="event-card">
-              <p className="muted">Why this is competitive</p>
-              <strong>It is easy to explain and hard to fake.</strong>
+              <p className="muted">Verifier evidence</p>
+              <strong>On-chain ZK verification is visible on testnet.</strong>
               <p>
-                A judge can see the private proof concept, the Stellar contract,
-                and the duplicate-claim prevention in one route.
+                The proof verification transaction gives judges concrete Stellar
+                evidence before the nullifier claim step.
               </p>
+              <a
+                href={deployment.proofVerificationTx}
+                target="_blank"
+                rel="noreferrer"
+                className="contract-link"
+              >
+                View proof verification transaction
+              </a>
             </div>
             <div className="event-card">
               <p className="muted">Demo cue</p>

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { beneficiaries } from "@/data/beneficiaries";
 import { claims } from "@/data/claims";
-
-const CONTRACT_ID =
-  "CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD";
+import { deployment } from "@/data/deployment";
 
 export default function Dashboard() {
   const total = beneficiaries.length;
@@ -121,20 +119,47 @@ export default function Dashboard() {
 
           <div className="contract-panel stack-offset">
             <div className="panel-heading">
-              <h3>Stellar deployment</h3>
+              <h3>Claim gate</h3>
               <span className="status-pill">
                 <span className="status-dot" aria-hidden="true" />
                 Testnet
               </span>
             </div>
-            <p className="contract-id">{CONTRACT_ID}</p>
+            <p className="contract-id">{deployment.claimGateContractId}</p>
             <a
-              href="https://lab.stellar.org/r/testnet/contract/CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD"
+              href={deployment.claimGateExplorer}
               target="_blank"
               rel="noreferrer"
               className="contract-link"
             >
-              Open contract in Stellar Lab
+              Open claim gate in Stellar Lab
+            </a>
+          </div>
+
+          <div className="contract-panel stack-offset">
+            <div className="panel-heading">
+              <h3>ZK verifier</h3>
+              <span className="status-pill">
+                <span className="status-dot" aria-hidden="true" />
+                Proof verified
+              </span>
+            </div>
+            <p className="contract-id">{deployment.verifierContractId}</p>
+            <a
+              href={deployment.verifierExplorer}
+              target="_blank"
+              rel="noreferrer"
+              className="contract-link"
+            >
+              Open verifier in Stellar Lab
+            </a>
+            <a
+              href={deployment.proofVerificationTx}
+              target="_blank"
+              rel="noreferrer"
+              className="contract-link"
+            >
+              View proof verification transaction
             </a>
           </div>
         </article>
@@ -143,10 +168,9 @@ export default function Dashboard() {
       <section className="route-callout">
         <strong>What to improve next</strong>
         <p>
-          If you want an even stronger submission, the next milestone is to
-          connect the proof page to a real Noir output and surface the contract
-          result in this dashboard. The current UI now makes that future step
-          feel natural instead of bolted on.
+          The next milestone is wiring the successful verifier transaction into
+          the claim gate so the app can prove first, then submit the nullifier
+          claim as one operator workflow.
         </p>
       </section>
     </main>

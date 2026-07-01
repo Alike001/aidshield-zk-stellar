@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { beneficiaries } from "@/data/beneficiaries";
+import { deployment } from "@/data/deployment";
 
 function makeNullifier(name: string, id: number) {
   const seed = `${name}-${id}-aidshield`;
@@ -37,6 +38,7 @@ export default function VerifyPage() {
       commitment: `commitment-${selected.id.toString().padStart(4, "0")}`,
       witness: selected.eligible ? "private eligibility witness built" : "eligibility witness failed",
       contract: "Soroban claim gate",
+      verifier: deployment.verifierContractId,
     };
   }, [generated, selected]);
 
@@ -46,7 +48,7 @@ export default function VerifyPage() {
     setGenerated(true);
 
     if (selected.eligible) {
-      setStatus("Proof accepted. The contract can receive the claim.");
+      setStatus("Proof accepted. The deployed verifier path is ready for the claim.");
     } else {
       setStatus("Proof rejected. The registry does not prove eligibility.");
     }
@@ -206,6 +208,8 @@ export default function VerifyPage() {
                 {"\n"}
                 witness: {proofEnvelope.witness}
                 {"\n"}
+                verifier: {proofEnvelope.verifier}
+                {"\n"}
                 contract: {proofEnvelope.contract}
               </>
             ) : (
@@ -226,11 +230,21 @@ export default function VerifyPage() {
             <strong>{generated ? "Next step" : "What happens next"}</strong>
             <p>
               {generated && selected?.eligible
-                ? "Send the proof envelope to the claim page. The contract should accept it once and only once."
+                ? "Send the proof envelope to the claim page. The verifier proof transaction is live, and the claim gate should consume the nullifier once."
                 : generated
                 ? "This record should not move forward. The user should be shown a clear rejection path."
                 : "When the proof is generated, the claim route becomes available for eligible beneficiaries."}
             </p>
+            {generated && selected?.eligible ? (
+              <a
+                href={deployment.proofVerificationTx}
+                target="_blank"
+                rel="noreferrer"
+                className="contract-link"
+              >
+                View testnet proof verification
+              </a>
+            ) : null}
           </div>
         </article>
       </section>
