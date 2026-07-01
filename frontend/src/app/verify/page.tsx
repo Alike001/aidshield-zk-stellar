@@ -236,14 +236,22 @@ export default function VerifyPage() {
                 : "When the proof is generated, the claim route becomes available for eligible beneficiaries."}
             </p>
             {generated && selected?.eligible ? (
-              <a
-                href={deployment.proofVerificationTx}
-                target="_blank"
-                rel="noreferrer"
-                className="contract-link"
-              >
-                View testnet proof verification
-              </a>
+              <div className="section-actions inline-actions">
+                <Link
+                  href="/claim"
+                  className="button-link"
+                >
+                  Continue to claim
+                </Link>
+                <a
+                  href={deployment.proofVerificationTx}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contract-link"
+                >
+                  View testnet proof verification
+                </a>
+              </div>
             ) : null}
           </div>
         </article>

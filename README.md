@@ -176,7 +176,7 @@ scripts/verify-aidshield-proof.sh <VERIFIER_CONTRACT_ID>
 
 1. Start on the home page and explain the problem: aid eligibility needs proof without identity exposure.
 2. Open `/verify`, select an eligible beneficiary, and generate the proof envelope.
-3. Open `/claim`, submit the claim once, then submit again to demonstrate replay blocking.
+3. Open `/claim`, run the Stellar verifier preflight, submit the claim once, then submit again to demonstrate replay blocking.
 4. Open `/dashboard` and show the registry, claim history, and Stellar contract ID.
 5. Point out the implementation boundary: Noir proof verification is live in a verifier contract, the claim gate blocks nullifier replays, and the next milestone is connecting verifier success directly to claim acceptance.
 
@@ -200,8 +200,7 @@ Aid eligibility is sensitive. A beneficiary should not have to reveal raw identi
 
 Critical before final submission:
 
-- Wire a real verifier path into Soroban or document a reproducible verifier invocation plan with proof artifacts.
-- Connect the deployed verifier transaction result to the claim gate in the app/API workflow.
+- Connect deployed verifier success to claim-gate submission at the app/API or composed-contract level.
 - Upgrade the Noir circuit away from placeholder hashing or clearly label it as a demo constraint system.
 - Add a short 2-3 minute video showing the verification, claim, duplicate rejection, and contract evidence.
 - Add screenshots of the landing page, verification flow, claim flow, and dashboard.

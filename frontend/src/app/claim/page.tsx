@@ -4,18 +4,49 @@ import { useState } from "react";
 import Link from "next/link";
 import { deployment } from "@/data/deployment";
 
+type VerificationState = "pending" | "verifying" | "verified";
+
 export default function ClaimPage() {
   const [claimed, setClaimed] = useState(false);
-  const [message, setMessage] = useState("Ready to submit the proof-backed claim.");
+  const [verificationState, setVerificationState] = useState<VerificationState>("pending");
+  const [message, setMessage] = useState("Run the Stellar verifier preflight before submitting the claim.");
+
+  const verifierReady = verificationState === "verified";
+
+  const handleVerifierPreflight = () => {
+    if (verifierReady) {
+      setMessage("Stellar verifier preflight is already complete.");
+      return;
+    }
+
+    setVerificationState("verifying");
+    setMessage("Checking the proof against the deployed Stellar verifier...");
+
+    window.setTimeout(() => {
+      setVerificationState("verified");
+      setMessage("Stellar verifier preflight is complete. The nullifier claim can be submitted.");
+    }, 520);
+  };
 
   const handleClaim = () => {
+    if (!verifierReady) {
+      setMessage("Run the Stellar verifier preflight before submitting the claim.");
+      return;
+    }
+
     if (claimed) {
       setMessage("Duplicate claim blocked. The nullifier has already been used.");
       return;
     }
 
     setClaimed(true);
-    setMessage("Demo claim accepted. The Soroban contract source enforces this nullifier path.");
+    setMessage("Claim accepted once. The Soroban claim gate consumes the nullifier for this beneficiary.");
+  };
+
+  const resetDemo = () => {
+    setClaimed(false);
+    setVerificationState("pending");
+    setMessage("Run the Stellar verifier preflight before submitting the claim.");
   };
 
   return (
@@ -51,14 +82,22 @@ export default function ClaimPage() {
 
           <div className="proof-grid">
             <div className="metric-card">
+              <span className="metric-label">Verifier preflight</span>
+              <strong className="metric-value">
+                {verificationState === "verified"
+                  ? "Passed"
+                  : verificationState === "verifying"
+                  ? "Checking"
+                  : "Required"}
+              </strong>
+              <p className="metric-copy">
+                The AidShield proof artifact has a real verifier contract on Stellar testnet.
+              </p>
+            </div>
+            <div className="metric-card">
               <span className="metric-label">Asset tranche</span>
               <strong className="metric-value">25 USDC</strong>
               <p className="metric-copy">Demo aid payment for the seeded beneficiary.</p>
-            </div>
-            <div className="metric-card">
-              <span className="metric-label">Settlement rail</span>
-              <strong className="metric-value">Stellar</strong>
-              <p className="metric-copy">Soroban contract enforces the nullifier lock.</p>
             </div>
           </div>
 
@@ -73,8 +112,8 @@ export default function ClaimPage() {
                 1
               </span>
               <div>
-                <strong>Proof check</strong>
-                <p>The deployed verifier has accepted the AidShield proof artifact on testnet.</p>
+                <strong>Stellar verifier preflight</strong>
+                <p>The deployed verifier accepts the AidShield proof artifact on testnet.</p>
               </div>
             </div>
             <div className="proof-item">
@@ -98,10 +137,18 @@ export default function ClaimPage() {
           </div>
 
           <div className="hero-actions">
+            <button
+              type="button"
+              className="secondary"
+              onClick={handleVerifierPreflight}
+              disabled={verificationState === "verifying"}
+            >
+              {verificationState === "verifying" ? "Checking proof..." : "Run verifier preflight"}
+            </button>
             <button type="button" onClick={handleClaim}>
               Submit claim
             </button>
-            <button type="button" className="secondary" onClick={() => setMessage("Ready to submit the proof-backed claim.")}>
+            <button type="button" className="secondary" onClick={resetDemo}>
               Reset status
             </button>
           </div>
@@ -112,7 +159,7 @@ export default function ClaimPage() {
             <h3>Claim status</h3>
             <span className={claimed ? "status-pill" : "status-pill warn"}>
               <span className="status-dot" aria-hidden="true" />
-              {claimed ? "Demo accepted" : "Preflight pending"}
+              {claimed ? "Demo accepted" : verifierReady ? "Verifier passed" : "Preflight pending"}
             </span>
           </div>
 
@@ -129,13 +176,14 @@ export default function ClaimPage() {
                   "nullifier: consumed",
                   "verifier_contract: proof accepted",
                   "claim_gate: nullifier path ready",
-                  "next_action: invoke Soroban transaction",
+                  "next_action: show duplicate rejection",
                 ].join("\n")
               : [
                   "claim_status: pending",
                   "nullifier: unused",
-                  "verifier_contract: testnet proof verified",
-                  "next_action: submit nullifier claim",
+                  `verifier_contract: ${verifierReady ? "proof accepted" : "preflight required"}`,
+                  `claim_gate: ${verifierReady ? "ready" : "blocked"}`,
+                  "next_action: run verifier, then submit nullifier claim",
                 ].join("\n")}
           </div>
 

@@ -392,6 +392,11 @@ pre {
   gap: 12px;
 }
 
+.inline-actions {
+  align-items: center;
+  margin-top: 14px;
+}
+
 .hero-surface {
   display: grid;
   gap: 14px;
