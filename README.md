@@ -1,72 +1,83 @@
 # AidShield
 
-AidShield is a privacy-preserving humanitarian aid distribution prototype for **Stellar Hacks: Real-World ZK**. It lets a beneficiary prove aid eligibility with a zero-knowledge proof path, then routes the claim through a Stellar Soroban contract that blocks duplicate claims with nullifiers.
+Privacy-preserving humanitarian aid claims on Stellar, powered by Noir zero-knowledge proofs and Soroban nullifier enforcement.
 
-## What It Solves
+AidShield is built for **Stellar Hacks: Real-World ZK**. It helps NGOs, governments, foundations, and relief agencies verify that a beneficiary is eligible for aid without exposing the beneficiary's private registry record. A public nullifier then lets the Stellar contract block duplicate claims.
 
-Aid programs often need to verify who is eligible before funds move, but exposing identity records creates privacy and safety risks. AidShield separates the two concerns:
+## Hackathon Summary
 
-- Beneficiaries prove they are in the eligible set without revealing the underlying private record.
-- Operators get a clear audit trail for each claim decision.
-- Stellar keeps the claim gate transparent and prevents replay through nullifier tracking.
+Aid distribution systems have a hard tradeoff: operators need to prevent fraud, but beneficiaries should not have to reveal sensitive identity data, household details, or risk status every time they receive support.
 
-## Demo Flow
+AidShield separates those concerns:
 
-1. An aid organization prepares an eligible beneficiary set.
-2. The Noir circuit verifies a private witness against the expected root.
-3. The frontend shows the proof envelope and nullifier that will protect the claim.
-4. The Soroban contract accepts a valid claim once.
-5. A repeated claim is rejected because the nullifier has already been used.
-6. The dashboard shows registry, claim, and deployment context for judges/operators.
+- **Private eligibility:** a Noir circuit proves the beneficiary is part of an approved aid registry.
+- **Public replay protection:** a nullifier is revealed so the same eligibility record cannot claim twice.
+- **Stellar audit trail:** Soroban contracts provide public verifier and claim evidence on Stellar testnet.
+- **Operator workflow:** a Next.js demo shows verification, claim submission, duplicate-claim prevention, and claim history.
 
-## ZK + Stellar Integration
+## Why This Needs Stellar
 
-The hackathon asks for meaningful ZK on Stellar: the proof should be load-bearing and Stellar should be part of the working system, ideally by verifying proofs inside a Soroban contract. AidShield currently includes the core pieces of that architecture:
+Humanitarian aid often crosses borders, organizations, and currencies. Stellar is a strong fit because it is designed for low-cost, real-world payment and settlement flows, including stable-value assistance.
 
-- `circuits/aidshield/src/main.nr` contains the Noir circuit for the eligibility proof path.
-- `contracts/aidshield_contract/src/lib.rs` contains the Soroban claim gate and nullifier store.
-- `contracts/aidshield_verifier/src/lib.rs` contains the Soroban UltraHonk verifier wrapper for AidShield proof artifacts.
-- `frontend/` presents the proof, claim, and dashboard workflow for the demo.
+AidShield uses Stellar as the shared trust layer:
 
-The current claim-gate MVP still accepts a `proof_valid` boolean so the deployed claim logic can focus on nullifier enforcement and claim replay prevention. AidShield now also includes a separate deployed verifier contract that verifies the Noir UltraHonk proof artifacts on Stellar testnet. The top submission-critical hardening step is connecting verifier success to the claim gate in the frontend/API flow.
+- Verifier evidence can be checked publicly on Stellar testnet.
+- Claim nullifiers are consumed by a Soroban contract so replay attempts are visible and blocked.
+- The architecture can evolve into stablecoin disbursement once eligibility and claim authorization are proven.
+- NGOs and auditors do not need to trust a private database as the only source of truth.
 
-## What Is Real Today
+## Why This Needs Zero-Knowledge
+
+Eligibility data can be dangerous when exposed. In real aid programs, a beneficiary record may imply location, displacement status, household size, medical risk, political vulnerability, or financial hardship.
+
+AidShield uses ZK so the public system only sees what it needs:
+
+| Public | Private |
+| --- | --- |
+| Registry root | Beneficiary leaf |
+| Claim nullifier | Merkle path |
+| Verifier result | Path direction bits |
+| Contract and transaction evidence | Nullifier secret |
+
+The proof is load-bearing: it is the reason the system can verify eligibility without publishing the underlying beneficiary record.
+
+## What Works Today
 
 | Area | Status |
 | --- | --- |
 | Open-source repo | Present |
-| Frontend demo | Next.js app with landing, verification, claim, and dashboard routes |
-| ZK circuit | Noir circuit proves private leaf membership path and public nullifier using Poseidon2 constraints |
-| Stellar contract | Soroban contract deployed on Stellar Testnet and stores used nullifiers |
-| Duplicate prevention | Implemented in the contract and covered by tests |
-| On-chain proof verification | Implemented as a separate Soroban verifier contract on Stellar Testnet |
-| Aid transfer | Not yet implemented; claim acceptance prepares the settlement step |
+| Frontend demo | Landing, verification, claim, and dashboard routes |
+| Noir circuit | Poseidon2-based private membership path with public nullifier |
+| ZK artifacts | UltraHonk proof, public inputs, and verification key generation |
+| Stellar verifier | Deployed Soroban verifier contract on Stellar testnet |
+| Stellar claim gate | Deployed Soroban contract that stores used nullifiers |
+| Duplicate prevention | Implemented and tested in the claim contract |
+| Claim history | Demo dashboard shows claim and deployment context |
+| Real aid transfer | Not yet implemented; next step after claim authorization |
 
-## Stellar Deployment
+## Live Stellar Evidence
 
-Network: Stellar Testnet
+Network: **Stellar testnet**
 
-Contract ID:
+Claim gate contract:
 
 ```text
 CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD
 ```
 
-Contract explorer:
+Claim gate explorer:
 
 ```text
 https://lab.stellar.org/r/testnet/contract/CDB7NHCG27T3SB7KTGUALZHIAAVQ4NAVGMPBWBJ55FQWJTQLQRMQORKD
 ```
 
-Note: the local contract source now returns typed claim errors for duplicate and invalid-proof paths. If you redeploy this updated contract before submission, replace the contract ID and explorer link above.
-
-Verifier contract ID:
+Verifier contract:
 
 ```text
 CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
 ```
 
-Verifier contract explorer:
+Verifier explorer:
 
 ```text
 https://lab.stellar.org/r/testnet/contract/CCRP7IP4Z2L4AOX2ASL3SB67CRB4F3E3374IZBDLWQLLLJMYJZ5JUEVA
@@ -85,18 +96,71 @@ Successful `verify_proof` transaction:
 https://stellar.expert/explorer/testnet/tx/6994f5839af521a900a8b4d1a73d20a97573f82c1fbd7dea7a10fc8a866037ad
 ```
 
+Public proof inputs shown in the demo:
+
+```text
+root:      0x13287d14736b83bbd54da85e40b028f6128eb92d2b0fdb63c33f7893d811236a
+nullifier: 0x1e8f4af5f474c2fbf6e4fc60190759071045a057a595c3d614098fae0bdd528f
+```
+
+## Demo Walkthrough
+
+1. Open the landing page and frame the problem: aid eligibility should be verified without exposing beneficiary records.
+2. Open `/verify`, select an eligible beneficiary, and generate the proof envelope.
+3. Show the public/private boundary: only the root, nullifier, and verifier evidence become public.
+4. Open `/claim`, run the Stellar verifier preflight, and submit the claim.
+5. Submit again to show duplicate-claim prevention through the consumed nullifier.
+6. Open `/dashboard` to show registry health, claim history, and contract evidence.
+
+Recommended video length: 2-3 minutes.
+
+## Architecture
+
+```text
+NGO registry
+    |
+    v
+Private witness + Merkle path
+    |
+    v
+Noir circuit -> UltraHonk proof
+    |
+    v
+Soroban verifier contract on Stellar
+    |
+    v
+Claim gate consumes public nullifier once
+    |
+    v
+Dashboard / audit trail
+```
+
+Key paths:
+
+```text
+backend/                         Merkle and proof helper scripts
+circuits/aidshield/              Noir circuit and prover input
+contracts/aidshield_verifier/    Soroban UltraHonk verifier wrapper
+contracts/aidshield_contract/    Soroban claim gate and nullifier store
+frontend/                        Next.js demo app
+docs/                            Architecture and audit notes
+```
+
 ## Project Structure
 
 ```text
 aidshield-zk-stellar/
-  backend/                 Proof and Merkle helper scripts
-  circuits/aidshield/      Noir circuit and prover input
-  contracts/               Soroban smart contract
-  docs/                    Architecture notes
-  frontend/                Next.js demo app
+  backend/
+  circuits/
+  contracts/
+    aidshield_contract/
+    aidshield_verifier/
+  docs/
+  frontend/
+  scripts/
 ```
 
-## Running The Frontend
+## Run The Frontend
 
 ```bash
 cd frontend
@@ -104,7 +168,11 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open:
+
+```text
+http://localhost:3000
+```
 
 Production checks:
 
@@ -115,22 +183,24 @@ npx tsc --noEmit
 npm run build
 ```
 
-## Testing The Contract
+Note: the frontend uses `next dev --webpack` because this project hit a Turbopack filesystem/HMR issue during local development.
+
+## Test The Claim Contract
 
 ```bash
 cd contracts/aidshield_contract
 cargo test
 ```
 
-The contract tests cover:
+The tests cover:
 
-- accepting one valid claim
-- rejecting a duplicate nullifier
-- rejecting an invalid proof flag
+- Accepting one valid claim.
+- Rejecting a duplicate nullifier.
+- Rejecting an invalid proof flag.
 
-## Generating ZK Artifacts
+## Generate ZK Artifacts
 
-AidShield can generate UltraHonk proof artifacts for the Noir circuit using the verifier-compatible toolchain:
+AidShield generates UltraHonk proof artifacts for the Noir circuit using a verifier-compatible toolchain.
 
 ```bash
 noirup -v 1.0.0-beta.9
@@ -146,12 +216,19 @@ circuits/aidshield/target/public_inputs
 circuits/aidshield/target/vk
 ```
 
-See `docs/zk-verifier-integration.md` for the Soroban verifier integration plan.
-See `docs/noir-circuit-audit.md` for the current circuit audit and remaining cryptographic hardening work.
+Circuit audit:
 
-## Building The Verifier Contract
+```text
+docs/noir-circuit-audit.md
+```
 
-AidShield includes a Soroban verifier wrapper at `contracts/aidshield_verifier`. It stores the AidShield verification key at deployment and exposes `verify_proof(public_inputs, proof)`.
+Verifier integration notes:
+
+```text
+docs/zk-verifier-integration.md
+```
+
+## Build The Verifier Contract
 
 ```bash
 stellar contract build \
@@ -173,51 +250,43 @@ scripts/deploy-aidshield-verifier.sh
 scripts/verify-aidshield-proof.sh <VERIFIER_CONTRACT_ID>
 ```
 
-## Demo Script
-
-1. Start on the home page and explain the problem: aid eligibility needs proof without identity exposure.
-2. Open `/verify`, select an eligible beneficiary, and generate the proof envelope.
-3. Open `/claim`, run the Stellar verifier preflight, submit the claim once, then submit again to demonstrate replay blocking.
-4. Open `/dashboard` and show the registry, claim history, and Stellar contract ID.
-5. Point out the implementation boundary: Noir proof verification is live in a verifier contract, the claim gate blocks nullifier replays, and the next milestone is connecting verifier success directly to claim acceptance.
-
-## Why Stellar
-
-Aid programs often distribute stable-value assistance across borders and institutions. Stellar is a strong fit because it is already oriented around low-cost real-world payments, stablecoins, and transparent settlement. In AidShield, Stellar should become the shared settlement and audit layer: NGOs can publish claim rules, beneficiaries can claim once, and auditors can verify that nullifiers were consumed without exposing private beneficiary records.
-
-## Why Zero-Knowledge
-
-Aid eligibility is sensitive. A beneficiary should not have to reveal raw identity documents, household attributes, or risk status just to prove they qualify. ZK lets the system prove a private registry fact while exposing only the minimum public data needed for fraud prevention: the Merkle root, proof result, and nullifier.
-
 ## Current Limitations
 
-- The frontend uses seeded demo data rather than a live beneficiary database.
-- The current Noir circuit uses a two-level demo membership path; production deployments should support dynamic registry sizes and lifecycle updates.
-- The claim-gate MVP receives `proof_valid`; verifier proof checking is currently a separate Soroban contract invocation.
-- The proof helper scripts are local Node.js scripts and are not yet exposed through an API.
-- Wallet authentication and real aid token transfer are future work.
+This is a hackathon prototype, so the unfinished parts are explicit:
 
-## Submission Roadmap
+- The frontend uses seeded demo data rather than a live NGO beneficiary database.
+- The Noir circuit uses a small fixed-depth demo tree; production should support larger registry depths and registry rotation.
+- The verifier contract proves the ZK path on Stellar, while the claim gate still receives `proof_valid` as an input. The next hardening step is composing verifier success directly into claim acceptance.
+- The proof helper scripts are local scripts, not a hosted proof service.
+- Wallet authentication and stablecoin disbursement are future work.
+
+## Roadmap
 
 Critical before final submission:
 
-- Connect deployed verifier success to claim-gate submission at the app/API or composed-contract level.
-- Replace the fixed-depth demo membership path with a registry-size-aware circuit and operator tooling.
-- Add a short 2-3 minute video showing the verification, claim, duplicate rejection, and contract evidence.
-- Add screenshots of the landing page, verification flow, claim flow, and dashboard.
+- Record and attach the 2-3 minute demo video.
+- Add screenshots of the landing, verification, claim, and dashboard flows.
+- Make the final README/demo explicitly show the successful verifier transaction.
 
 High value:
 
-- Add a simple architecture diagram.
-- Add loading, error, and duplicate-claim states to the frontend.
+- Connect verifier success directly to claim-gate submission in a composed app/API flow.
 - Add wallet/testnet account setup instructions.
+- Expand the Noir circuit to support configurable registry depth.
+
+Post-hackathon:
+
+- Add NGO registry administration.
+- Add stablecoin disbursement after successful claim authorization.
+- Add role-based operator access and audit exports.
+- Add beneficiary recovery and privacy-preserving appeal flows.
 
 ## Stack
 
 - Frontend: Next.js, React, Tailwind CSS
-- ZK: Noir
-- Contract: Stellar Soroban, Rust
-- Helpers: Node.js, Merkle tree utilities
+- ZK: Noir, UltraHonk
+- Contracts: Stellar Soroban, Rust
+- Helpers: Node.js Merkle/proof utilities
 
 ## License
 
